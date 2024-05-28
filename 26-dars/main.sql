@@ -143,12 +143,22 @@ on Sc.student_course_id = G.student_course_id
 group by C.name;
 
 --4 
+with NewTable as(
+    select Sc.course_id as id, min(S.age) as age
+    from Students as S 
+    join Student_course as Sc 
+    on S.student_id= Sc.student_id
+    group by Sc.course_id
+)
+
 select C.name, array_agg(S.name) as "Yosh o'quvchilar", min(S.age) as "Minimal yosh"
 from Students as S
 join Student_course as Sc 
 on S.student_id = Sc.student_id
 join Courses as C 
 on C.course_id = Sc.course_id
+join NewTable as Nt 
+on Nt.id = Sc.course_id and Nt.age = S.age
 group by C.name;
 
 --5
