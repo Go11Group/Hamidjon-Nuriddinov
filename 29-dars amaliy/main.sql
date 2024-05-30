@@ -1,0 +1,1 @@
+Create table Userss(id uuid, first_name varchar, last_name varchar, email varchar, gender varchar, age int);
