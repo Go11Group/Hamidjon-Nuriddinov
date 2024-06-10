@@ -1,0 +1,1 @@
+Create table Problem(id uuid default gen_random_uuid(), status bool, name varchar, difficulty varchar);
