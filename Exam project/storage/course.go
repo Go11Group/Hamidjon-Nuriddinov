@@ -1,7 +1,8 @@
-package courses
+package storage
 
 import (
 	"database/sql"
+	"mymode/module"
 	"time"
 )
 
@@ -13,15 +14,15 @@ func NewCourse(db *sql.DB) *NewCourseRepo {
 	return &NewCourseRepo{Db: db}
 }
 
-func (C *NewCourseRepo) Create(course Course) error {
+func (C *NewCourseRepo) CreateCourse(course module.Course) error {
 	_, err := C.Db.Exec(`INSERT INTO 
 						Courses(title, description) 
 						VALUES($1, $2)`, course.Title, course.Description)
 	return err
 }
 
-func (C *NewCourseRepo) Read(id string) (Course, error) {
-	course := Course{}
+func (C *NewCourseRepo) ReadCourse(id string) (module.Course, error) {
+	course := module.Course{}
 	err := C.Db.QueryRow(`SELECT 
 							  title, description, created_at FROM Courses
 						  WHERE 
@@ -29,16 +30,16 @@ func (C *NewCourseRepo) Read(id string) (Course, error) {
 	return course, err
 }
 
-func (C *NewCourseRepo) Update(course Course, id string) error {
+func (C *NewCourseRepo) UpdateCourse(course module.Course, id string) error {
 	_, err := C.Db.Exec(`UPDATE Courses SET 
 							title = $1, description = $2
 						WHERE 
-							deleted_at is null course_id = $3`,
+							deleted_at is null and course_id = $3`,
 		course.Title, course.Description, id)
 	return err
 }
 
-func (C *NewCourseRepo) Delete(id string) error {
+func (C *NewCourseRepo) DeleteCourse(id string) error {
 	_, err := C.Db.Exec(`UPDATE Courses SET 
 							deleted_at = $1
 						WHERE 
@@ -46,8 +47,8 @@ func (C *NewCourseRepo) Delete(id string) error {
 	return err
 }
 
-func (C *NewCourseRepo) GetAll(limit int, offset int) ([]Course, error) {
-	courses := []Course{}
+func (C *NewCourseRepo) GetAllCourses(limit int, offset int) ([]module.Course, error) {
+	courses := []module.Course{}
 	rows, err := C.Db.Query(`SELECT 
 								title, description, created_at 
 							FROM Courses
@@ -58,7 +59,7 @@ func (C *NewCourseRepo) GetAll(limit int, offset int) ([]Course, error) {
 	}
 
 	for rows.Next() {
-		course := Course{}
+		course := module.Course{}
 		err = rows.Scan(&course.Title, &course.Description, &course.CreatedAt)
 		if err != nil {
 			return courses, err

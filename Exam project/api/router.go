@@ -1,26 +1,57 @@
 package api
 
 import (
-	"mymode/api/handle"
-	users "mymode/storage/user"
+	"database/sql"
+	"mymode/storage"
 
 	"github.com/gin-gonic/gin"
 )
 
-func Router(db *users.NewUserRepo) *gin.Engine{
+type Handle struct {
+	u *storage.NewUserRepo
+	c *storage.NewCourseRepo
+	l *storage.NewLessonRepo
+	// e *storage.New
+}
+
+func Router(db *sql.DB) *gin.Engine {
 	router := gin.Default()
 
-	u := handle.ReqUser{}
+	var handle Handle
+	var u ReqUser
+	var c ReqCourse
+	var l ReqLesson
 
-	u.ConnectorDb(db)
+	handle.u = storage.NewUser(db)
+	handle.c = storage.NewCourse(db)
+	handle.l = storage.NewLesson(db)
+	// handle.e = storage.New
 
-	router.POST("/create", u.Create)
-	router.GET("/read/:id", u.Read)
-	router.PUT("/update/:id", u.Update)
-	router.DELETE("/delete/:id", u.Delete)
-	router.GET("/getAll/:limit/:offset", u.GetAll)
+	u.ConnectorDb(handle)
+	c.ConnectorDb(handle)
+	l.ConnectorDb(handle)
+	// e.ConnectorDb(handle)
 
+	user := router.Group("/user")
+	user.POST("/createUser", u.CreateUser)
+	user.GET("/readUser/:id", u.ReadUser)
+	user.PUT("/updateUser/:id", u.UpdateUser)
+	user.DELETE("/deleteUser/:id", u.DeleteUser)
+	user.GET("/getAllUsers/:limit/:offset", u.GetAllUsers)
+
+	course := router.Group("/course")
+	course.POST("/createCourse", c.CreateCourse)
+	course.GET("/readCourse/:id", c.ReadCourse)
+	course.PUT("/updateCourse/:id", c.UpdateCourse)
+	course.DELETE("/deleteCourse/:id", c.DeleteCourse)
+	course.GET("/getAllCourses/:limit/:offset", c.GetAllCourses)
+
+	lesson := router.Group("/lesson")
+	lesson.POST("/createLesson", l.CreateLesson)
+	lesson.GET("/readLesson/:id", l.ReadLesson)
+	lesson.PUT("/updateLesson/:id", l.UpdateLesson)
+	lesson.DELETE("/deleteLesson/:id", l.DeleteLesson)
+	lesson.GET("/getAllLessons/:limit/:offset", l.GetAllLessons)
 
 	return router
 }
-

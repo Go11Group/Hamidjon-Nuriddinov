@@ -1,36 +1,36 @@
-package handle
+package api
 
 import (
 	"log"
-	users "mymode/storage/user"
+	"mymode/module"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 type ReqUser struct {
-	Db *users.NewUserRepo
+	Db Handle
 }
 
-func (U *ReqUser) ConnectorDb(db *users.NewUserRepo) {
+func (U *ReqUser) ConnectorDb(db Handle) {
 	U.Db = db
 }
 
-func (U *ReqUser) Create(c *gin.Context) {
-	user := users.User{}
+func (U *ReqUser) CreateUser(c *gin.Context) {
+	user := module.User{}
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
 		log.Fatal(err)
 		c.JSON(500, err)
 		return
 	}
-	U.Db.Create(user)
+	U.Db.u.CreateUser(user)
 	c.JSON(200, "Succes")
 }
 
-func (U *ReqUser) Read(c *gin.Context) {
+func (U *ReqUser) ReadUser(c *gin.Context) {
 	id := c.Param("id")
-	user, err := U.Db.Read(id)
+	user, err := U.Db.u.ReadUser(id)
 	if err != nil {
 		log.Fatal(err)
 		c.JSON(404, err)
@@ -39,8 +39,8 @@ func (U *ReqUser) Read(c *gin.Context) {
 	c.JSON(200, user)
 }
 
-func (U *ReqUser) Update(c *gin.Context) {
-	user := users.User{}
+func (U *ReqUser) UpdateUser(c *gin.Context) {
+	user := module.User{}
 
 	id := c.Param("id")
 
@@ -50,7 +50,7 @@ func (U *ReqUser) Update(c *gin.Context) {
 		c.JSON(500, err)
 		return
 	}
-	err = U.Db.Update(user, id)
+	err = U.Db.u.UpdateUser(user, id)
 	if err != nil {
 		c.JSON(404, "Not found")
 		return
@@ -58,18 +58,18 @@ func (U *ReqUser) Update(c *gin.Context) {
 	c.JSON(200, "Succes")
 }
 
-func (U *ReqUser) Delete(c *gin.Context) {
+func (U *ReqUser) DeleteUser(c *gin.Context) {
 	id := c.Param("id")
-	err := U.Db.Delete(id)
+	err := U.Db.u.DeleteUser(id)
 	if err != nil {
 		log.Fatal(err)
 		c.JSON(404, err)
 		return
 	}
-	c.JSON(200, "Succes")
+	c.JSON(200, "Success")
 }
 
-func (U *ReqUser) GetAll(c *gin.Context) {
+func (U *ReqUser) GetAllUsers(c *gin.Context) {
 	var lim, off int
 	limit := c.Param("limit")
 	if limit == "" {
@@ -92,11 +92,11 @@ func (U *ReqUser) GetAll(c *gin.Context) {
 		c.JSON(404, "Not found")
 		return
 	}
-	users, err := U.Db.GetAll(lim, off)
-	if err != nil{
+	users, err := U.Db.u.GetAllUsers(lim, off)
+	if err != nil {
 		log.Fatal(err)
 		c.JSON(404, err)
-		return 
+		return
 	}
 	c.JSON(200, users)
 }

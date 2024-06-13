@@ -1,10 +1,8 @@
 package main
 
 import (
-	"log"
 	"mymode/api"
 	"mymode/storage"
-	users "mymode/storage/user"
 )
 
 func main() {
@@ -14,10 +12,10 @@ func main() {
 	}
 	defer db.Close()
 
-	router := api.Router(users.NewUser(db))
+	router := api.Router(db)
 
 	err = router.Run(":8080")
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 }

@@ -1,7 +1,8 @@
-package lessons
+package storage
 
 import (
 	"database/sql"
+	"mymode/module"
 	"time"
 )
 
@@ -13,15 +14,15 @@ func NewLesson(db *sql.DB) *NewLessonRepo {
 	return &NewLessonRepo{Db: db}
 }
 
-func (L *NewLessonRepo) Create(lesson Lesson) error {
+func (L *NewLessonRepo) CreateLesson(lesson module.Lesson) error {
 	_, err := L.Db.Exec(`INSERT INTO 
 						Lessons(title, content) 
 						VALUES($1, $2)`, lesson.Title, lesson.Content)
 	return err
 }
 
-func (L *NewLessonRepo) Read(id string) (Lesson, error) {
-	lesson := Lesson{}
+func (L *NewLessonRepo) ReadLesson(id string) (module.Lesson, error) {
+	lesson := module.Lesson{}
 	err := L.Db.QueryRow(`SELECT 
 							  title, content, created_at FROM Lessons
 						  WHERE 
@@ -29,16 +30,16 @@ func (L *NewLessonRepo) Read(id string) (Lesson, error) {
 	return lesson, err
 }
 
-func (L *NewLessonRepo) Update(lesson Lesson, id string) error {
+func (L *NewLessonRepo) UpdateLesson(lesson module.Lesson, id string) error {
 	_, err := L.Db.Exec(`UPDATE Lessons SET 
 							title = $1, content = $2
 						WHERE 
-							deleted_at is null lesson_id = $3`,
+							deleted_at is null and lesson_id = $3`,
 		lesson.Title, lesson.Content, id)
 	return err
 }
 
-func (L *NewLessonRepo) Delete(id string) error {
+func (L *NewLessonRepo) DeleteLesson(id string) error {
 	_, err := L.Db.Exec(`UPDATE Lessons SET 
 							deleted_at = $1
 						WHERE 
@@ -46,8 +47,8 @@ func (L *NewLessonRepo) Delete(id string) error {
 	return err
 }
 
-func (L *NewLessonRepo) GetAll(limit int, offset int) ([]Lesson, error) {
-	lessons := []Lesson{}
+func (L *NewLessonRepo) GetAllLessons(limit int, offset int) ([]module.Lesson, error) {
+	lessons := []module.Lesson{}
 	rows, err := L.Db.Query(`SELECT 
 								title, content, created_at 
 							FROM Lessons
@@ -58,7 +59,7 @@ func (L *NewLessonRepo) GetAll(limit int, offset int) ([]Lesson, error) {
 	}
 
 	for rows.Next() {
-		lesson := Lesson{}
+		lesson := module.Lesson{}
 		err = rows.Scan(&lesson.Title, &lesson.Content, &lesson.CreatedAt)
 		if err != nil {
 			return lessons, err
