@@ -2,7 +2,7 @@ package storage
 
 import (
 	"database/sql"
-	"mymode/module"
+	"mymode/model"
 	"time"
 )
 
@@ -14,23 +14,23 @@ func NewLesson(db *sql.DB) *NewLessonRepo {
 	return &NewLessonRepo{Db: db}
 }
 
-func (L *NewLessonRepo) CreateLesson(lesson module.Lesson) error {
+func (L *NewLessonRepo) CreateLesson(lesson model.Lesson) error {
 	_, err := L.Db.Exec(`INSERT INTO 
-						Lessons(title, content) 
-						VALUES($1, $2)`, lesson.Title, lesson.Content)
+						Lessons(course_id, title, content) 
+						VALUES($1, $2, $3)`, lesson.CourseId, lesson.Title, lesson.Content)
 	return err
 }
 
-func (L *NewLessonRepo) ReadLesson(id string) (module.Lesson, error) {
-	lesson := module.Lesson{}
+func (L *NewLessonRepo) ReadLesson(id string) (model.Lesson, error) {
+	lesson := model.Lesson{}
 	err := L.Db.QueryRow(`SELECT 
-							  title, content, created_at FROM Lessons
+							  title, content FROM Lessons
 						  WHERE 
 							  lesson_id = $1`, id).Scan(&lesson.Title, &lesson.Content)
 	return lesson, err
 }
 
-func (L *NewLessonRepo) UpdateLesson(lesson module.Lesson, id string) error {
+func (L *NewLessonRepo) UpdateLesson(lesson model.Lesson, id string) error {
 	_, err := L.Db.Exec(`UPDATE Lessons SET 
 							title = $1, content = $2
 						WHERE 
@@ -47,20 +47,21 @@ func (L *NewLessonRepo) DeleteLesson(id string) error {
 	return err
 }
 
-func (L *NewLessonRepo) GetAllLessons(limit int, offset int) ([]module.Lesson, error) {
-	lessons := []module.Lesson{}
+func (L *NewLessonRepo) GetAllLessons(filter string, arr []interface{}) ([]model.Lesson, error) {
+	lessons := []model.Lesson{}
 	rows, err := L.Db.Query(`SELECT 
-								title, content, created_at 
-							FROM Lessons
-							LIMIT $1 
-							OFFSET $2`, limit, offset)
+								lesson_id, course_id, title, content, created_at
+							FROM 
+								Lessons
+							WHERE
+								deleted_at is null` + filter, arr...)
 	if err != nil {
 		return lessons, err
 	}
 
 	for rows.Next() {
-		lesson := module.Lesson{}
-		err = rows.Scan(&lesson.Title, &lesson.Content, &lesson.CreatedAt)
+		lesson := model.Lesson{}
+		err = rows.Scan(&lesson.Title, &lesson.Content)
 		if err != nil {
 			return lessons, err
 		}

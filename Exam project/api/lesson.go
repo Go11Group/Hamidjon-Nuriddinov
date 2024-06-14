@@ -2,8 +2,9 @@ package api
 
 import (
 	"log"
-	"mymode/module"
+	"mymode/model"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +18,7 @@ func (L *ReqLesson) ConnectorDb(db Handle) {
 }
 
 func (L *ReqLesson) CreateLesson(c *gin.Context) {
-	lesson := module.Lesson{}
+	lesson := model.Lesson{}
 	err := c.ShouldBindJSON(&lesson)
 	if err != nil {
 		log.Fatal(err)
@@ -40,7 +41,7 @@ func (L *ReqLesson) ReadLesson(c *gin.Context) {
 }
 
 func (L *ReqLesson) UpdateLesson(c *gin.Context) {
-	lesson := module.Lesson{}
+	lesson := model.Lesson{}
 
 	id := c.Param("id")
 
@@ -70,33 +71,80 @@ func (L *ReqLesson) DeleteLesson(c *gin.Context) {
 }
 
 func (L *ReqLesson) GetAllLessons(c *gin.Context) {
-	var lim, off int
-	limit := c.Param("limit")
-	if limit == "" {
-		lim = 0
+	params := make(map[string]interface{})
+	filter := ""
+	lessonFilter := model.LessonFilter{}
+	var err error
+	lessonFilter.CourseId = c.Query("course_id")
+	lessonFilter.Title = c.Query("title")
+	lessonFilter.Content = c.Query("content")
+	limit := c.Query("limit")
+	if limit != "" {
+		lessonFilter.Limit, err = strconv.Atoi(limit)
+		if err != nil {
+			lessonFilter.Limit = 0
+		}
+	} else {
+		lessonFilter.Limit = 0
 	}
-	lim, err := strconv.Atoi(limit)
-	if err != nil {
-		log.Fatal(err)
-		c.JSON(404, "Not found")
-		return
+	offset := c.Query("offset")
+	if offset != "" {
+		lessonFilter.Offset, err = strconv.Atoi(offset)
+		if err != nil {
+			lessonFilter.Offset = 0
+		}
+	} else {
+		lessonFilter.Offset = 0
 	}
 
-	offset := c.Param("offset")
-	if offset == "" {
-		off = 0
+	if len(lessonFilter.CourseId) > 0 {
+		params["course_id"] = lessonFilter.CourseId
+		filter += " and course_id = :course_id"
 	}
-	off, err = strconv.Atoi(offset)
-	if err != nil {
-		log.Fatal(err)
-		c.JSON(404, "Not found")
-		return
+
+	if len(lessonFilter.Title) > 0 {
+		params["title"] = lessonFilter.Title
+		filter += " and title = :title"
 	}
-	lessons, err := L.Db.l.GetAllLessons(lim, off)
+
+	if len(lessonFilter.Content) > 0 {
+		params["content"] = lessonFilter.Content
+		filter += " and content = :content"
+	}
+
+	if lessonFilter.Limit > 0 {
+		params["limit"] = lessonFilter.Limit
+		filter += " limit = :limit"
+	}
+
+	if lessonFilter.Offset > 0 {
+		params["offset"] = lessonFilter.Offset
+		filter += " offset = :offset"
+	}
+
+	query, arr := ReplaceQueryParamsLesson(filter, params)
+
+	lessons, err := L.Db.l.GetAllLessons(query, arr)
 	if err != nil {
 		log.Fatal(err)
 		c.JSON(404, err)
 		return
 	}
 	c.JSON(200, lessons)
+}
+
+func ReplaceQueryParamsLesson(query string, params map[string]interface{}) (string, []interface{}) {
+	var (
+		i    int = 1
+		args []interface{}
+	)
+
+	for k, v := range params {
+		if k != "" && strings.Contains(query, ":"+k) {
+			query = strings.ReplaceAll(query, ":"+k, "$"+strconv.Itoa(i))
+			args = append(args, v)
+			i++
+		}
+	}
+	return query, args
 }

@@ -2,8 +2,9 @@ package api
 
 import (
 	"log"
-	"mymode/module"
+	"mymode/model"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +18,7 @@ func (C *ReqCourse) ConnectorDb(db Handle) {
 }
 
 func (C *ReqCourse) CreateCourse(c *gin.Context) {
-	course := module.Course{}
+	course := model.Course{}
 	err := c.ShouldBindJSON(&course)
 	if err != nil {
 		log.Fatal(err)
@@ -40,7 +41,7 @@ func (C *ReqCourse) ReadCourse(c *gin.Context) {
 }
 
 func (C *ReqCourse) UpdateCourse(c *gin.Context) {
-	course := module.Course{}
+	course := model.Course{}
 
 	id := c.Param("id")
 
@@ -70,33 +71,95 @@ func (C *ReqCourse) DeleteCourse(c *gin.Context) {
 }
 
 func (C *ReqCourse) GetAllCourses(c *gin.Context) {
-	var lim, off int
-	limit := c.Param("limit")
-	if limit == "" {
-		lim = 0
+	params := make(map[string]interface{})
+	filter := ""
+	courseFilter := model.CourseFilter{}
+	var err error
+	courseFilter.Title = c.Query("title")
+	courseFilter.Description = c.Query("description")
+	limit := c.Query("limit")
+	if limit != "" {
+		courseFilter.Limit, err = strconv.Atoi(limit)
+		if err != nil {
+			courseFilter.Limit = 0
+		}
+	} else {
+		courseFilter.Limit = 0
 	}
-	lim, err := strconv.Atoi(limit)
-	if err != nil {
-		log.Fatal(err)
-		c.JSON(404, "Not found")
-		return
+	offset := c.Query("offset")
+	if offset != "" {
+		courseFilter.Offset, err = strconv.Atoi(offset)
+		if err != nil {
+			courseFilter.Offset = 0
+		}
+	} else {
+		courseFilter.Offset = 0
 	}
 
-	offset := c.Param("offset")
-	if offset == "" {
-		off = 0
+	if len(courseFilter.Title) > 0 {
+		params["title"] = courseFilter.Title
+		filter += " and title = :title"
 	}
-	off, err = strconv.Atoi(offset)
-	if err != nil {
-		log.Fatal(err)
-		c.JSON(404, "Not found")
-		return
+
+	if len(courseFilter.Description) > 0 {
+		params["description"] = courseFilter.Description
+		filter += " and description = :description"
 	}
-	courses, err := C.Db.c.GetAllCourses(lim, off)
+
+	if courseFilter.Limit > 0 {
+		params["limit"] = courseFilter.Limit
+		filter += " limit = :limit"
+	}
+
+	if courseFilter.Offset > 0 {
+		params["offset"] = courseFilter.Offset
+		filter += " offset = :offset"
+	}
+
+	query, arr := ReplaceQueryParamsCourse(filter, params)
+
+	users, err := C.Db.c.GetAllCourses(query, arr)
 	if err != nil {
 		log.Fatal(err)
 		c.JSON(404, err)
 		return
 	}
-	c.JSON(200, courses)
+	c.JSON(200, users)
+}
+
+func ReplaceQueryParamsCourse(query string, params map[string]interface{}) (string, []interface{}) {
+	var (
+		i    int = 1
+		args []interface{}
+	)
+
+	for k, v := range params {
+		if k != "" && strings.Contains(query, ":"+k) {
+			query = strings.ReplaceAll(query, ":"+k, "$"+strconv.Itoa(i))
+			args = append(args, v)
+			i++
+		}
+	}
+	return query, args
+}
+
+func (C *ReqCourse) GetLessonsByCourse(c *gin.Context) {
+	id := c.Param("course_id")
+	courseLessons, err := C.Db.c.GetLessonsByCourse(id)
+	if err != nil {
+		log.Fatal(err)
+		c.JSON(404, "Not found")
+		return
+	}
+	c.JSON(200, courseLessons)
+}
+
+func (C *ReqCourse) GetEnrolledUsersByCourse(c *gin.Context){
+	course_id := c.Param("course_id")
+	courseUsers, err := C.Db.c.GetEnrolledUsersByCourse(course_id)
+	if err != nil{
+		log.Fatal(err)
+		c.JSON(404, "Not found")
+	}
+	c.JSON(200, courseUsers)
 }
