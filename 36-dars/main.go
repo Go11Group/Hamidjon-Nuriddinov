@@ -1,18 +1,21 @@
 package main
 
 import (
-	"mymode/handles"
-	"mymode/storage/postgres"
+	"log"
+	"my_module/handler"
+	postgres "my_module/postgres/storege"
 )
 
-func main(){
-	db, err := postgres.Connect()
-	if err != nil{
-		panic(err)
+func main() {
+	db, err := postgres.ConnectDB()
+	if err != nil {
+		log.Fatal("Error open database", err.Error())
 	}
 	defer db.Close()
 
+	u := postgres.NewUserRepo(db)
 
-	server := handles.NewHandler(db)
-	server.ListenAndServe()
+	r := handler.NewHandler(handler.Handler{User: u})
+
+	r.Run(":8080")
 }
