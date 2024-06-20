@@ -1,0 +1,16 @@
+INSERT INTO Foydalanuvchilar(first_name, last_name, age, field) VALUES
+('Aisha', 'Omarova', 29, 'Medicine'),
+('Temur', 'Bekzodov', 33, 'Engineering'),
+('Laylo', 'Rahimova', 22, 'Arts'),
+('Nodir', 'Karimov', 45, 'Finance'),
+('Dmitry', 'Ivanov', 38, 'Physics'),
+('Anna', 'Petrova', 30, 'Chemistry'),
+('Ivan', 'Smirnov', 50, 'Mathematics'),
+('Olga', 'Sidorova', 26, 'Biology'),
+('John', 'Smith', 28, 'Law'),
+('Emily', 'Johnson', 35, 'Economics'),
+('Michael', 'Brown', 47, 'History'),
+('Sarah', 'Davis', 41, 'Philosophy'),
+('Hiroshi', 'Tanaka', 34, 'Engineering'),
+('Akira', 'Yamamoto', 25, 'Physics'),
+('Yuki', 'Kobayashi', 29, 'Computer Science');

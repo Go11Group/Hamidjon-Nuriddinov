@@ -1,0 +1,2 @@
+UPDATE Users
+SET filed = '';

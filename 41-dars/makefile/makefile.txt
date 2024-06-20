@@ -1,0 +1,1 @@
+makefile - bir nechta filelarni bir paytda ishlatish uchun ishlatilar ekan.
