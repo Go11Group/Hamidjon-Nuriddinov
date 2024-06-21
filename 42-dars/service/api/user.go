@@ -25,8 +25,13 @@ func (U *ReqUser) CreateUser(c *gin.Context) {
 		c.JSON(500, err)
 		return
 	}
-
-	
+	err = U.Db.u.CreateUser(user)
+	if err != nil {
+		log.Fatal(err)
+		c.JSON(404, "Not found")
+		return
+	}
+	c.JSON(200, "Succes")
 }
 
 func (U *ReqUser) ReadUser(c *gin.Context) {
