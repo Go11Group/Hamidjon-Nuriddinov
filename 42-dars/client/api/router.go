@@ -13,6 +13,7 @@ func Router()*gin.Engine{
 
 	user := router.Group("/users")
 	user.GET("/readUser/:id", handler.ReadUser)
+	user.GET("/getAllUsers", handler.GetAll)
 
 	return router
 }

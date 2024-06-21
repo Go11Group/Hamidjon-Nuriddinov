@@ -2,7 +2,7 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"mymode/model"
 	"net/http"
 
@@ -11,16 +11,32 @@ import (
 
 func ReadUser(c *gin.Context) {
 	id := c.Param("id")
-	fmt.Println(id)
 	resp, err := http.Get("http://localhost:8080/users/readUser/" + id)
 	if err != nil {
-		panic(err)
+		c.JSON(404, "Not found")
+		log.Fatal(err)
 	}
 	user := model.User{}
 	err = json.NewDecoder(resp.Body).Decode(&user)
 	if err != nil {
-		panic(err)
+		c.JSON(404, "Not found")
+		log.Fatal(err)
 	}
 
 	c.JSON(200, user)
+}
+
+func GetAll(c *gin.Context) {
+	resp, err := http.Get("http://localhost:8080/users/getAllUsers")
+	if err != nil {
+		c.JSON(404, "Not found")
+		log.Fatal(err)
+	}
+	users := []model.User{}
+	err = json.NewDecoder(resp.Body).Decode(&users)
+	if err != nil {
+		c.JSON(404, "Not found")
+		log.Fatal(err)
+	}
+	c.JSON(200, users)
 }
