@@ -12,20 +12,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateUser(c *gin.Context) {
-	user := model.User{}
-	err := c.ShouldBindJSON(&user)
+func CreateEnrollment(c *gin.Context) {
+	enrollment := model.Enrollment{}
+	err := c.ShouldBindJSON(&enrollment)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)
 	}
-	fmt.Println(user)
-	data, err := json.Marshal(user)
+	fmt.Println(enrollment)
+	data, err := json.Marshal(enrollment)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)
 	}
-	resp, err := http.Post("http://localhost:8080/users/createUser", "JSON", bytes.NewBuffer(data))
+	resp, err := http.Post("http://localhost:8080/enrollments/createEnrollment", "JSON", bytes.NewBuffer(data))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)
@@ -39,46 +39,46 @@ func CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, string(body))
 }
 
-func ReadUser(c *gin.Context) {
+func ReadEnrollment(c *gin.Context) {
 	id := c.Param("id")
-	resp, err := http.Get("http://localhost:8080/users/readUser/" + id)
+	resp, err := http.Get("http://localhost:8080/enrollments/readEnrollment/" + id)
 	if err != nil {
 		c.JSON(404, "Not found")
 		log.Fatal(err)
 	}
-	user := model.User{}
-	err = json.NewDecoder(resp.Body).Decode(&user)
+	enrollment := model.Enrollment{}
+	err = json.NewDecoder(resp.Body).Decode(&enrollment)
 	if err != nil {
 		c.JSON(404, "Not found")
 		log.Fatal(err)
 	}
 
-	c.JSON(200, user)
+	c.JSON(200, enrollment)
 }
 
-func GetAllUsers(c *gin.Context) {
-	resp, err := http.Get("http://localhost:8080/users/getAllUsers")
+func GetAllEnrollments(c *gin.Context) {
+	resp, err := http.Get("http://localhost:8080/enrollments/getAllEnrollments")
 	if err != nil {
 		c.JSON(404, "Not found")
 		log.Fatal(err)
 	}
-	users := []model.User{}
-	err = json.NewDecoder(resp.Body).Decode(&users)
+	enrollments := []model.Enrollment{}
+	err = json.NewDecoder(resp.Body).Decode(&enrollments)
 	if err != nil {
 		c.JSON(404, "Not found")
 		log.Fatal(err)
 	}
-	c.JSON(200, users)
+	c.JSON(200, enrollments)
 }
 
-func UpdateUser(c *gin.Context) {
-	user := model.User{}
-	err := c.ShouldBindJSON(&user)
+func UpdateEnrollment(c *gin.Context) {
+	enrollment := model.Enrollment{}
+	err := c.ShouldBindJSON(&enrollment)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)
 	}
-	data, err := json.Marshal(user)
+	data, err := json.Marshal(enrollment)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)
@@ -86,7 +86,7 @@ func UpdateUser(c *gin.Context) {
 	id := c.Param("id")
 
 	client := http.Client{}
-	req, err := http.NewRequest("PUT", "http://localhost:8080/users/updateUser/"+id, bytes.NewBuffer(data))
+	req, err := http.NewRequest("PUT", "http://localhost:8080/enrollments/updateEnrollment/"+id, bytes.NewBuffer(data))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)
@@ -105,10 +105,10 @@ func UpdateUser(c *gin.Context) {
 }
 
 
-func DeleteUser(c *gin.Context){
+func DeleteEnrollment(c *gin.Context){
 	id := c.Param("id")
 	client := http.Client{}
-	req, err := http.NewRequest("DELETE", "http://localhost:8080/users/deleteUser/" + id, bytes.NewBuffer([]byte{}))
+	req, err := http.NewRequest("DELETE", "http://localhost:8080/enrollments/deleteEnrollment/" + id, bytes.NewBuffer([]byte{}))
 	if err != nil{
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)

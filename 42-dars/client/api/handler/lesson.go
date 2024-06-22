@@ -12,20 +12,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateUser(c *gin.Context) {
-	user := model.User{}
-	err := c.ShouldBindJSON(&user)
+func CreateLesson(c *gin.Context) {
+	lesson := model.Lesson{}
+	err := c.ShouldBindJSON(&lesson)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)
 	}
-	fmt.Println(user)
-	data, err := json.Marshal(user)
+	fmt.Println(lesson)
+	data, err := json.Marshal(lesson)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)
 	}
-	resp, err := http.Post("http://localhost:8080/users/createUser", "JSON", bytes.NewBuffer(data))
+	resp, err := http.Post("http://localhost:8080/lessons/createLesson", "JSON", bytes.NewBuffer(data))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)
@@ -39,46 +39,46 @@ func CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, string(body))
 }
 
-func ReadUser(c *gin.Context) {
+func ReadLesson(c *gin.Context) {
 	id := c.Param("id")
-	resp, err := http.Get("http://localhost:8080/users/readUser/" + id)
+	resp, err := http.Get("http://localhost:8080/lessons/readLesson/" + id)
 	if err != nil {
 		c.JSON(404, "Not found")
 		log.Fatal(err)
 	}
-	user := model.User{}
-	err = json.NewDecoder(resp.Body).Decode(&user)
+	lesson := model.Lesson{}
+	err = json.NewDecoder(resp.Body).Decode(&lesson)
 	if err != nil {
 		c.JSON(404, "Not found")
 		log.Fatal(err)
 	}
 
-	c.JSON(200, user)
+	c.JSON(200, lesson)
 }
 
-func GetAllUsers(c *gin.Context) {
-	resp, err := http.Get("http://localhost:8080/users/getAllUsers")
+func GetAllLessons(c *gin.Context) {
+	resp, err := http.Get("http://localhost:8080/lessons/getAllLessons")
 	if err != nil {
 		c.JSON(404, "Not found")
 		log.Fatal(err)
 	}
-	users := []model.User{}
-	err = json.NewDecoder(resp.Body).Decode(&users)
+	lessons := []model.Lesson{}
+	err = json.NewDecoder(resp.Body).Decode(&lessons)
 	if err != nil {
 		c.JSON(404, "Not found")
 		log.Fatal(err)
 	}
-	c.JSON(200, users)
+	c.JSON(200, lessons)
 }
 
-func UpdateUser(c *gin.Context) {
-	user := model.User{}
-	err := c.ShouldBindJSON(&user)
+func UpdateLesson(c *gin.Context) {
+	lesson := model.Lesson{}
+	err := c.ShouldBindJSON(&lesson)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)
 	}
-	data, err := json.Marshal(user)
+	data, err := json.Marshal(lesson)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)
@@ -86,7 +86,7 @@ func UpdateUser(c *gin.Context) {
 	id := c.Param("id")
 
 	client := http.Client{}
-	req, err := http.NewRequest("PUT", "http://localhost:8080/users/updateUser/"+id, bytes.NewBuffer(data))
+	req, err := http.NewRequest("PUT", "http://localhost:8080/lessons/updateLesson/"+id, bytes.NewBuffer(data))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)
@@ -105,10 +105,10 @@ func UpdateUser(c *gin.Context) {
 }
 
 
-func DeleteUser(c *gin.Context){
+func DeleteLesson(c *gin.Context){
 	id := c.Param("id")
 	client := http.Client{}
-	req, err := http.NewRequest("DELETE", "http://localhost:8080/users/deleteUser/" + id, bytes.NewBuffer([]byte{}))
+	req, err := http.NewRequest("DELETE", "http://localhost:8080/lessons/deleteLesson/" + id, bytes.NewBuffer([]byte{}))
 	if err != nil{
 		c.JSON(http.StatusBadRequest, err)
 		log.Fatal(err)
