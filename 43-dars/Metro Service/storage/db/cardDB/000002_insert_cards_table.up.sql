@@ -1,0 +1,35 @@
+INSERT INTO Cards (number, user_id) VALUES
+('1234-5678-9012-3456', '64b93341-c83f-456e-a0e6-42a27d52cc75'),
+('2345-6789-0123-4567', 'cb25594c-f889-4506-9731-7508b65225b2'),
+('3456-7890-1234-5678', '8d31d9f6-29c8-460d-a3fa-7309e984a9fc'),
+('4567-8901-2345-6789', 'b15b443a-2e5e-4d85-a322-c426167eeb16'),
+('5678-9012-3456-7890', '537328ae-12a2-4af2-b6e5-30bca9b8cd6f'),
+('6789-0123-4567-8901', '8cf0f8b3-9fbe-4b23-ae40-d83c67e856d6'),
+('7890-1234-5678-9012', '8fbc2f76-b81f-4543-b1bd-247fca61ac4e'),
+('8901-2345-6789-0123', 'bd564f35-4089-4663-9988-ea3182c6a71a'),
+('9012-3456-7890-1234', '0047617b-74a1-4b12-85b3-998e20f13a7f'),
+('0123-4567-8901-2345', '3332ae93-c230-4ca1-9722-7f01f394009c'),
+('1234-5678-9012-3457', 'bd452fba-c708-443f-a987-43a5f0e56f78'),
+('2345-6789-0123-4568', '0667e7e6-68f1-43f3-a648-5465ea6be60d'),
+('3456-7890-1234-5679', 'bdfc5cc8-c98a-4192-95dc-e3ef9fd0690f'),
+('4567-8901-2345-6790', '4eb94036-449b-420f-bc70-e7c63a434c85'),
+('5678-9012-3456-7901', '6457ad61-fb22-4f0e-87b4-d99353549b8e'),
+('6789-0123-4567-9012', 'c2ac3262-a1fb-4994-be85-69434fb6aa37'),
+('7890-1234-5678-0123', '020daf8c-42f2-4b1d-b7dd-35280d99fbf5'),
+('8901-2345-6789-1234', '801a89e6-c725-45db-be73-4f800aed6b00'),
+('9012-3456-7890-2345', 'cdadf195-f31b-4d20-9c33-085ba7714a13'),
+('0123-4567-8901-3456', 'd6c4cac1-8768-4303-81bb-a79511ecb108'),
+('1234-5678-9012-4567', '64b93341-c83f-456e-a0e6-42a27d52cc75'),  -- Repeat for demonstration
+('2345-6789-0123-5678', 'cb25594c-f889-4506-9731-7508b65225b2'),  -- Repeat for demonstration
+('3456-7890-1234-6789', '8d31d9f6-29c8-460d-a3fa-7309e984a9fc'),  -- Repeat for demonstration
+('4567-8901-2345-7890', 'b15b443a-2e5e-4d85-a322-c426167eeb16'),  -- Repeat for demonstration
+('5678-9012-3456-8901', '537328ae-12a2-4af2-b6e5-30bca9b8cd6f'),  -- Repeat for demonstration
+('6789-0123-4567-9012', '8cf0f8b3-9fbe-4b23-ae40-d83c67e856d6'),  -- Repeat for demonstration
+('7890-1234-5678-0123', '8fbc2f76-b81f-4543-b1bd-247fca61ac4e'),  -- Repeat for demonstration
+('8901-2345-6789-1234', 'bd564f35-4089-4663-9988-ea3182c6a71a'),  -- Repeat for demonstration
+('9012-3456-7890-2345', '0047617b-74a1-4b12-85b3-998e20f13a7f'); -- Repeat for demonstration
+
+
+
+--migrate create -ext sql -dir storage/db/cardDB -seq create_cards_table
+--migrate -database 'postgres://postgres:hamidjon4424@localhost:5432/metro?sslmode=disable' -path storage/db/cardDB up
