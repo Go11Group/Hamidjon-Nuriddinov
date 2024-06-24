@@ -19,6 +19,7 @@ func Router(db *sql.DB)*gin.Engine{
 	card.GET("/getAllCards", h.GetAllCards)
 	card.PUT("/updateCard/:id", h.UpdateCard)
 	card.DELETE("/deleteCard/:id", h.DeleteCard)
+	card.GET("/getBalance/:userId/:cardId", h.GetBalance)
 
 	station := router.Group("/station")
 	station.POST("/createStation", h.CreateStation)

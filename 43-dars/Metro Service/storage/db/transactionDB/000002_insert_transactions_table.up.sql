@@ -1,14 +1,17 @@
 INSERT INTO Transactions (card_id, amount, terminal_id, transaction_type)
 VALUES
-    ('40a02c66-9100-4841-850d-1c51c4d7bfe7', 30050.0, '6a86a46b-7098-4b50-aee0-8194bf3031bb', 'debit'),
-    ('468726c4-dbf0-410a-ba2c-9502cf4885e1', 7500.0, '60c184a4-2089-4fa8-af70-ba8cee2fd5da', 'debit'),
-    ('8b2a17bd-0d5f-4bc8-ba2a-1a36c4f0db25', 15025.0, '6b33d0f7-edf7-4ade-94af-16029cc2c2c8', 'debit'),
-    ('6d19aa92-71f1-4b92-a4dc-5a5d95c86a1f', 10075.0, '378506ae-d8e9-43b5-bfec-1b46b7fda58e', 'debit'),
-    ('49ee7925-f3da-47c8-ae9f-5672eaef48a5', 9025.0, '421d57bc-2a45-42e7-bfb6-8d16997b4f4b', 'debit'),
-    ('91dcf567-ea21-439a-930f-93332e20d52f', 30050.0, '4e3eb30d-5060-4e7d-9317-d12d98a0ad3e', 'debit'),
-    ('73a1c37e-4aec-4697-b3ab-ca168b597088', 7500.0, '17cc3a26-bf42-40c7-b9cd-debc1ac16ec7', 'debit');
+    ('5b34f33c-ff68-47a4-ac92-d77acb32ca6c', 30050.0, 'aeba1901-dcd7-4dc4-9706-30f01276716b', 'debit'),
+    ('e0dec45d-0338-4f71-b4aa-1c9eba006f55', 7500.0, '6a86a46b-7098-4b50-aee0-8194bf3031bb', 'debit'),
+    ('224177d0-9a28-4956-b39c-2a50f659b366', 15025.0, '4cd1623e-d483-4455-b55a-1090177745ab', 'debit'),
+    ('2db53d2c-52f0-4b3e-bccc-bd6e9c27d60f', 10075.0, 'd2d93600-0325-4503-80c5-5a070acd6e01', 'debit'),
+    ('3e25910c-fd56-4ca6-9dac-94d7da0a134f', 9025.0, '421d57bc-2a45-42e7-bfb6-8d16997b4f4b', 'debit'),
+    ('032b1c57-38c9-4b33-9a15-6c79fe40a0c8', 30050.0, '421d57bc-2a45-42e7-bfb6-8d16997b4f4b', 'debit'),
+    ('fc86a901-8f3d-45f5-8bc9-38cdc06cb2a7', 7500.0, 'bc28406a-d39b-4d2a-8d84-096038f723c5', 'debit');
 
 
 
 --migrate create -ext sql -dir storage/db/transactionDB -seq create_transactions_table
 --migrate -database 'postgres://postgres:hamidjon4424@localhost:5432/metro?sslmode=disable' -path storage/db/transactionDB up
+
+
+

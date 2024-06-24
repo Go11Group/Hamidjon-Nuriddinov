@@ -118,3 +118,20 @@ func DeleteUser(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, string(body))
 }
+
+func GetBalance(c *gin.Context){
+	userId := c.Param("userId")
+	cardId := c.Param("cardId")
+	resp, err := http.Get("http://localhost:8081/user/getBalance/" + userId + "/" + cardId)
+	if err != nil{
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	balance := model.UserBalance{}
+	err = json.NewDecoder(resp.Body).Decode(&balance)
+	if err != nil{
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	c.JSON(http.StatusOK, balance)
+}

@@ -52,3 +52,32 @@ func (C *CardRepo) DeleteCard(id string) error {
 }
 
 
+func (C *CardRepo) GetBalance(userId string, cardId string)(model.UserBalance, error){
+	balance := model.UserBalance{}
+	err := C.Db.QueryRow(`SELECT 
+						    user_id, 
+						    card_id, 
+						    number, 
+						    COALESCE(Debit, 0) - COALESCE(Credit, 0) as Balance
+						FROM
+						    (SELECT 
+						        C.user_id, 
+						        T.card_id, 
+						        C.number,
+						        SUM(CASE WHEN T.transaction_type = 'debit' THEN T.amount ELSE 0 END) as Debit, 
+						        SUM(CASE WHEN T.transaction_type = 'credit' THEN T.amount ELSE 0 END) as Credit
+						    FROM 
+						        Cards as C
+						    JOIN
+						        Transactions as T
+						    ON
+						        C.card_id = T.card_id
+							WHERE 
+								C.card_id = $1 and C.user_id = $2
+						    GROUP BY 
+						        C.user_id, 
+						        T.card_id, 
+						        C.number
+						    ) as NewTable;`, cardId, userId).Scan(&balance.UserId, &balance.CardId, &balance.CardNumber, &balance.Balance)
+	return balance, err
+}

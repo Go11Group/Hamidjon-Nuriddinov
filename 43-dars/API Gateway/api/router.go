@@ -16,6 +16,7 @@ func Router()*gin.Engine{
 	user.GET("/getAllUsers", handler.GetAllUsers)
 	user.PUT("/updateUser/:id", handler.UpdateUser)
 	user.DELETE("/deleteUser/:id", handler.DeleteUser)
+	user.GET("/getBalance/:userId/:cardId", handler.GetBalance)
 
 	station := router.Group("/station")
 	station.POST("/createStation", handler.CreateStation)

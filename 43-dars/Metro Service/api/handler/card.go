@@ -68,4 +68,16 @@ func (h *Handler) DeleteCard(c *gin.Context) {
 }
 
 
+func (h *Handler) GetBalance(c *gin.Context){
+	userId := c.Param("userId")
+	cardId := c.Param("cardId")
+	balance, err := h.Card.GetBalance(userId, cardId)
+	if err != nil{
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	c.JSON(http.StatusOK, balance)
+}
+
+
 

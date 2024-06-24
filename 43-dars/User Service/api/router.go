@@ -17,6 +17,7 @@ func Router(db *sql.DB) *gin.Engine {
 	user.GET("/getAllUsers", h.GetAllUsers)
 	user.PUT("/updateUser/:id", h.UpdateUser)
 	user.DELETE("/deleteUser/:id", h.DeleteUser)
+	user.GET("getBalance/:userId/:cardId", h.GetBalance)
 
 	return router
 }

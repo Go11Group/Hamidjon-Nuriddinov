@@ -30,3 +30,10 @@ type Terminal struct {
 	TerminalId string `json:"terminal_id"`
 	StationId  string `json:"station_id"`
 }
+
+type UserBalance struct{
+	UserId string `json:"user_id"`
+	CardId string `json:"card_id"`
+	CardNumber string `json:"number"`
+	Balance float64 `json:"balance"`
+}
