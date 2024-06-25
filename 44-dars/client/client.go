@@ -18,7 +18,7 @@ func main(){
 	defer conn.Close()
 	c := pb.NewTranslateServiceClient(conn)
 
-	text := []string{"Hello", "world", "apple", "book", "programming"}
+	text := []string{"Salom", "dunyo", "kitob", "darsturlash", "olma"}
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()

@@ -20,12 +20,12 @@ func (s *server) TranslateText(ctx context.Context, req *pb.TranslateRequest) (*
 	for _, i := range req.Words {
 		var word string
 		switch strings.ToLower(i) {
-		case "hello":
-			word = "salom"
-		case "world":
-			word = "dunyo"
-		case "apple":
-			word = "olma"
+		case "salom":
+			word = "hello"
+		case "dunyo":
+			word = "world"
+		case "olma":
+			word = "apple"
 		default:
 			word = "golang"
 		}
