@@ -1,0 +1,1 @@
+CREATE TABLE Bus(Number int, fromm varchar, too varchar, location varchar, traffic_stat boolean);
