@@ -1,0 +1,4 @@
+time=2024-07-19T12:15:52.191+05:00 level=ERROR msg="DeleteCenter request error: rpc error: code = Unavailable desc = error reading from server: EOF"
+time=2024-07-19T12:16:53.203+05:00 level=ERROR msg="DeleteCenter request error: rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial tcp 127.0.0.1:7777: connect: connection refused\""
+time=2024-07-19T12:17:41.737+05:00 level=ERROR msg="DeleteCenter request error: rpc error: code = Unavailable desc = error reading from server: EOF"
+time=2024-07-19T12:25:23.886+05:00 level=ERROR msg="DeleteCenter request error: rpc error: code = Unknown desc = ERR wrong number of arguments for 'hdel' command"

@@ -1,0 +1,1 @@
+time=2024-07-19T12:25:23.885+05:00 level=ERROR msg="Redisdan ma'lumotlarni olishda xatolik: ERR wrong number of arguments for 'hdel' command"
