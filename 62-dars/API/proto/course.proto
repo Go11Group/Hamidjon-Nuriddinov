@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option go_package = "genproto/course";
+
+package course;
+
+service CourseService{
+    rpc CreateCourse(Course) returns(CourseResp){}
+    rpc GetCourseById(CourseId) returns(CourseResp){}
+    rpc UpdateCourse(CourseResp) returns(UpdateResp){}
+    rpc DeleteCourse(CourseId) returns(Status){}
+}
+
+message Course{
+    string centerId = 1;
+    string name = 2;
+    string description = 3;
+    string teacher = 4;
+    int32 continuity = 5;
+}
+
+message CourseResp{
+    string id = 1;
+    string centerId = 2;
+    string name = 3;
+    string description = 4;
+    string teacher = 5;
+    int32 continuity = 6;
+}
+
+message CourseId{
+    string id = 1;
+}
+
+message UpdateResp{
+    string id = 1;
+    string centerId = 2;
+    string name = 3;
+    string description = 4;
+    string teacher = 5;
+    int32 continuity = 6;
+}
+
+message Status{
+    bool status = 1;
+    string message = 2;
+}

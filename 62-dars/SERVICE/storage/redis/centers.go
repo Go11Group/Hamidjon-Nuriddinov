@@ -2,7 +2,7 @@ package redisDb
 
 import (
 	"context"
-	pb "homework/genproto"
+	pb "homework/genproto/center"
 	"log"
 
 	"github.com/google/uuid"

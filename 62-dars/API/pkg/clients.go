@@ -1,7 +1,8 @@
 package pkg
 
 import (
-	center "api/genproto"
+	center "api/genproto/center"
+	"api/genproto/course"
 	"log"
 
 	"google.golang.org/grpc"
@@ -16,5 +17,16 @@ func NewCenterClient() center.CenterServiceClient{
 	}
 
 	conn := center.NewCenterServiceClient(listener)
+	return conn
+}
+
+func NewCourseClient() course.CourseServiceClient{
+	listener, err := grpc.NewClient(":7777", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil{
+		log.Println(err)
+		return nil
+	}
+
+	conn := course.NewCourseServiceClient(listener)
 	return conn
 }
